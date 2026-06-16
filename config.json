@@ -18,8 +18,18 @@
     "system-settings": [
         {
             "key": "sys-info",
-            "name": "<b>Global default settings.</b> These apply to every project unless a project enables its own override below.",
+            "name": "<b>Global default settings.</b> These apply to every project unless a project enables its own override below (and overrides are permitted).",
             "type": "descriptive"
+        },
+        {
+            "key": "override_policy",
+            "name": "<b>Project-level configuration override</b> — whether individual projects may use their own provider/keys instead of this global configuration.",
+            "type": "dropdown",
+            "choices": [
+                { "value": "disabled", "name": "Disabled — projects cannot override; the global configuration always applies" },
+                { "value": "user",     "name": "Enabled — configurable by project users (anyone with module-config rights)" },
+                { "value": "admin",    "name": "Enabled — only configurable by administrators (REDCap super users)" }
+            ]
         },
         {
             "key": "provider",
@@ -83,6 +93,11 @@
     ],
 
     "project-settings": [
+        {
+            "key": "override-note",
+            "name": "<i>Note: project-level override is controlled by your REDCap administrator. It may be disabled (the global configuration is always used) or restricted to administrators only. If so, the checkbox below has no effect for you.</i>",
+            "type": "descriptive"
+        },
         {
             "key": "override",
             "name": "<b>Override global settings</b> and use the project-specific provider configuration below.",

@@ -84,12 +84,45 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
     }
 
     /**
+     * Enforce the global override policy when project settings are saved.
+     * Returns an error string to block the save, or null to allow it.
+     */
+    function validateSettings($settings)
+    {
+        // Only relevant when saving a project's settings.
+        if (!$this->getProjectId()) return null;
+        if (empty($settings["override"])) return null; // not enabling an override
+
+        $policy = $this->getSystemSetting("override_policy");
+        if ($policy === "disabled") {
+            return "Project-level CAPTCHA overrides are disabled by your REDCap administrator.";
+        }
+        if ($policy === "admin" && !$this->currentUserIsSuperUser()) {
+            return "Only REDCap administrators may configure a project-level CAPTCHA override.";
+        }
+        return null;
+    }
+
+    /** Best-effort super-user check for the current user. */
+    private function currentUserIsSuperUser()
+    {
+        if (defined("SUPER_USER")) return (string)SUPER_USER === "1" || SUPER_USER === true;
+        $user = method_exists($this, "getUser") ? $this->getUser() : null;
+        return ($user && method_exists($user, "isSuperUser")) ? $user->isSuperUser() : false;
+    }
+
+    /**
      * Decide which provider + settings to use (project override or global default)
      * and instantiate the provider. Returns false if disabled / unconfigured.
      */
     private function resolveConfig()
     {
-        $override = (bool)$this->getProjectSetting("override");
+        // Project override is governed by a global policy: "disabled" forces the
+        // global config; "user" and "admin" both allow a project to override (the
+        // user/admin distinction only controls who may edit the project settings,
+        // enforced in validateSettings()). An unset policy behaves as "user".
+        $policy = $this->getSystemSetting("override_policy");
+        $override = ($policy !== "disabled") && (bool)$this->getProjectSetting("override");
         $this->always = (bool)$this->getProjectSetting("always");
         $this->debug  = (bool)$this->getSystemSetting("debug") || (bool)$this->getProjectSetting("p_debug");
 
