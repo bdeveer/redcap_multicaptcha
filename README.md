@@ -23,6 +23,46 @@ low-friction or score-based alternatives instead.
 | Friendly Captcha | Proof-of-work (EU/GDPR) | Site key, API key |
 | mCaptcha | Self-hosted proof-of-work | Instance URL, Site key, Account secret |
 
+## Choosing a provider
+
+All five do the same job — keep bots off your public surveys — but they differ on
+cost, how much they bother the participant, and what they do with participant data.
+That last point matters for research: hosted providers load third-party JavaScript
+in the participant's browser and verify tokens by calling out from your REDCap
+server, so they are a data-flow decision, not just a config toggle.
+
+*Pricing and terms below were current as of mid-2026 — confirm against each
+provider's own page before committing, as these change.*
+
+| Provider | Cost | Participant friction | Privacy / regulatory | Practical notes |
+|---|---|---|---|---|
+| **Cloudflare Turnstile** | Free, effectively unlimited | Invisible (usually no click) | GDPR/CCPA/ePrivacy compliant; **no cookie-consent banner needed**; no PII tracking. Traffic transits Cloudflare's global network, so strict **EU data residency** needs enterprise data-localization. | Easiest all-round choice; quickest setup. |
+| **Google reCAPTCHA v3** | Free only to **10,000 assessments/month per org** (cut in 2025); then ~$8/mo to 100k, ~$1 per 1,000 after | Invisible, score-based | Sends data to Google (US transfer); in the EU **typically requires a consent banner**. Weakest privacy posture of the five. | Most familiar/documented, but the score needs threshold tuning and the privacy story is the hardest to defend for human-subjects data. |
+| **hCaptcha** | Free to **100,000 verifications/month**; Pro ≈ $99–139/mo | Often a visible click/challenge (more friction than the invisible options) | Privacy-focused, no PII collected; works in essentially every country. | Good free headroom; expect occasional visible challenges for participants. |
+| **Friendly Captcha** | Free tier for non-commercial; paid from ≈ €9/mo (Starter, 1k req) / €39/mo (Growth, 5k req); **EU-only endpoint needs the ≈ €200/mo Advanced plan** | Invisible (proof-of-work) | German company, EU servers, GDPR/CCPA, **no cookies/no banner**, accessibility-compliant (WCAG/EAA). Strongest fit for EU/GDPR among the hosted options. | This module targets the **v1** siteverify endpoint; v2 sites use a different host + header (see caveats). |
+| **mCaptcha** | Free software (open source); cost = your own hosting + ops time | Invisible (proof-of-work) | **No third party at all** — nothing leaves your infrastructure, GDPR-compliant by design. | The only option with zero external dependency, but you run and maintain the server yourself. |
+
+### Quick guidance
+
+- **Just want it to work, low fuss:** Cloudflare Turnstile — free, invisible, no consent banner.
+- **EU participants / strict GDPR:** Friendly Captcha (EU-hosted) or self-hosted mCaptcha; Turnstile is also defensible (no banner). Avoid reCAPTCHA.
+- **No third party may touch participant data, or the server is firewalled/air-gapped:** mCaptcha (self-hosted). If you'd rather not run a server at all, the local-only [nedCAPTCHA](https://github.com/grezniczek/redcap_nedcaptcha) (image/math, no external service) is the simplest no-dependency route — this module is for when you specifically want a modern third-party service.
+- **High public-survey volume:** Turnstile (unlimited free) or hCaptcha (100k/mo free); watch reCAPTCHA's 10k/mo cap.
+- **Already standardized on reCAPTCHA and v2's weakness is the only issue:** reCAPTCHA v3 here gives you score-based gating, but mind the cost cap and EU consent requirement.
+
+### Common requirements (all providers)
+
+- **REDCap** 13.7.3+ (External Module Framework v14).
+- **PHP** 7.4+ with the **cURL** extension (used for server-side token verification).
+- **Outbound HTTPS** from the REDCap server to the provider's verify endpoint —
+  Turnstile, reCAPTCHA, hCaptcha, and Friendly Captcha all require this. A server
+  behind a tight firewall may block it (this is the original reason local-only
+  modules like nedCAPTCHA exist). **mCaptcha** is the exception: it verifies against
+  *your* instance, which can be internal.
+- The **participant's browser** must be able to load the provider's JavaScript.
+  reCAPTCHA/Turnstile/hCaptcha/Friendly are blocked in some networks (notably
+  mainland China for Google); mCaptcha avoids this.
+
 ## Getting keys for each provider
 
 The same links appear in the module's configuration screen, next to each
