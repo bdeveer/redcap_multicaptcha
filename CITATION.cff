@@ -6,7 +6,7 @@ type: software
 authors:
   - given-names: Bas
     family-names: de Veer
-    email: basdeveer@proton.me
+    email: bas.deveer@yale.edu
     affiliation: "Yale University"
 version: 0.1.0
 date-released: "2026-06-15"
