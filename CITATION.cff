@@ -10,7 +10,7 @@ authors:
 version: 0.1.0
 date-released: "2026-06-15"
 license: MIT
-repository-code: "https://github.com/REPLACE-ME/redcap_multicaptcha"
+repository-code: "https://github.com/bdeveer/redcap_multicaptcha"
 keywords:
   - redcap
   - redcap-external-module

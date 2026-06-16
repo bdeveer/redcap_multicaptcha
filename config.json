@@ -4,9 +4,9 @@
     "description": "Protect public surveys with a CAPTCHA / bot-check service of your choice (Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha, Friendly Captcha, or mCaptcha). Configurable globally with optional per-project override.",
     "authors": [
         {
-            "name": "Your Name",
-            "email": "you@example.org",
-            "institution": "Your Institution"
+            "name": "Bas de Veer",
+            "email": "basdeveer@proton.me",
+            "institution": ""
         }
     ],
     "framework-version": 14,
