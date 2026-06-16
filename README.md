@@ -23,6 +23,22 @@ low-friction or score-based alternatives instead.
 | Friendly Captcha | Proof-of-work (EU/GDPR) | Site key, API key |
 | mCaptcha | Self-hosted proof-of-work | Instance URL, Site key, Account secret |
 
+## Getting keys for each provider
+
+The same links appear in the module's configuration screen, next to each
+provider's key fields.
+
+| Provider | Get keys / sign up | Docs |
+|---|---|---|
+| Cloudflare Turnstile | [Cloudflare dashboard → Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) | [Setup docs](https://developers.cloudflare.com/turnstile/get-started/) |
+| Google reCAPTCHA v3 | [reCAPTCHA admin console](https://www.google.com/recaptcha/admin/create) (choose **v3**) | [v3 docs](https://developers.google.com/recaptcha/docs/v3) |
+| hCaptcha | [hCaptcha dashboard](https://dashboard.hcaptcha.com/signup) | [Developer docs](https://docs.hcaptcha.com/) |
+| Friendly Captcha | [Getting started](https://developer.friendlycaptcha.com/docs/getting-started/client) | [Developer hub](https://developer.friendlycaptcha.com/) |
+| mCaptcha | self-hosted — create a sitekey on your instance | [mCaptcha docs](https://mcaptcha.org/docs/) |
+
+Turnstile, reCAPTCHA, and hCaptcha all publish always-pass / always-fail **test
+keys** you can use to exercise both paths without a real account.
+
 ## How it works (the gate pattern)
 
 REDCap has no clean hook to *reject a survey submission*. So this module — like
