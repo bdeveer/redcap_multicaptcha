@@ -1,0 +1,36 @@
+<!-- Interstitial gate page rendered in place of the public survey. -->
+<!-- Placeholders are filled by MultiCaptchaExternalModule::renderGate(). -->
+<div id="mc-gate" style="max-width:600px;margin:30px auto;font-family:Arial,Helvetica,sans-serif;">
+    {LOGO}
+    <h3 style="margin:10px 0;">{TITLE}</h3>
+
+    <div style="border:1px solid #ddd;border-radius:6px;padding:20px;background:#fafafa;">
+        <p style="margin-top:0;">Please complete the verification below to continue to the survey.</p>
+
+        <!-- Provider client library -->
+        {SCRIPTS}
+
+        <form id="mc-form" method="post" action="{ACTION}">
+            <!-- Provider widget (injects its own hidden token field) -->
+            <div style="margin:15px 0;">{WIDGET}</div>
+
+            <div id="mc-fail" style="display:{FAILDISPLAY};color:#a00;margin:10px 0;">{FAILMSG}</div>
+
+            <button type="submit" id="mc-submit" class="btn btn-primary" disabled
+                    style="padding:8px 18px;">Continue</button>
+        </form>
+
+        <p style="font-size:11px;color:#999;margin-bottom:0;">Protected by {PROVIDER}.</p>
+    </div>
+</div>
+
+<script>
+// Enabled by the provider's success callback (or onload for invisible providers).
+function mc_enableSubmit() {
+    var b = document.getElementById("mc-submit");
+    if (b) b.disabled = false;
+}
+// Safety net: if a provider doesn't fire a callback within 8s, allow submit so
+// the visitor is never permanently stuck (server still verifies the token).
+setTimeout(mc_enableSubmit, 8000);
+</script>

@@ -1,0 +1,127 @@
+{
+    "name": "Multi-CAPTCHA",
+    "namespace": "YALE\\MultiCaptchaExternalModule",
+    "description": "Protect public surveys with a CAPTCHA / bot-check service of your choice (Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha, Friendly Captcha, or mCaptcha). Configurable globally with optional per-project override.",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "you@example.org",
+            "institution": "Your Institution"
+        }
+    ],
+    "framework-version": 14,
+    "compatibility": {
+        "redcap-version-min": "13.7.3",
+        "php-version-min": "7.4.0"
+    },
+
+    "system-settings": [
+        {
+            "key": "sys-info",
+            "name": "<b>Global default settings.</b> These apply to every project unless a project enables its own override below.",
+            "type": "descriptive"
+        },
+        {
+            "key": "provider",
+            "name": "Bot-check provider (global default)",
+            "type": "dropdown",
+            "choices": [
+                { "value": "none",         "name": "None (disabled)" },
+                { "value": "turnstile",    "name": "Cloudflare Turnstile" },
+                { "value": "recaptcha_v3", "name": "Google reCAPTCHA v3" },
+                { "value": "hcaptcha",     "name": "hCaptcha" },
+                { "value": "friendly",     "name": "Friendly Captcha" },
+                { "value": "mcaptcha",     "name": "mCaptcha (self-hosted)" }
+            ]
+        },
+
+        { "key": "turnstile_sitekey", "name": "Turnstile — Site key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "turnstile" } ] } },
+        { "key": "turnstile_secret", "name": "Turnstile — Secret key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "turnstile" } ] } },
+
+        { "key": "recaptcha_sitekey", "name": "reCAPTCHA v3 — Site key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "recaptcha_v3" } ] } },
+        { "key": "recaptcha_secret", "name": "reCAPTCHA v3 — Secret key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "recaptcha_v3" } ] } },
+        { "key": "recaptcha_threshold", "name": "reCAPTCHA v3 — Minimum passing score (0.0–1.0, default 0.5)", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "recaptcha_v3" } ] } },
+
+        { "key": "hcaptcha_sitekey", "name": "hCaptcha — Site key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "hcaptcha" } ] } },
+        { "key": "hcaptcha_secret", "name": "hCaptcha — Secret key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "hcaptcha" } ] } },
+
+        { "key": "friendly_sitekey", "name": "Friendly Captcha — Site key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "friendly" } ] } },
+        { "key": "friendly_secret", "name": "Friendly Captcha — API key (secret)", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "friendly" } ] } },
+
+        { "key": "mcaptcha_instance", "name": "mCaptcha — Instance base URL (e.g. https://mcaptcha.example.org)", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
+        { "key": "mcaptcha_sitekey", "name": "mCaptcha — Site key", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
+        { "key": "mcaptcha_secret", "name": "mCaptcha — Account secret", "type": "text",
+          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
+
+        { "key": "debug", "name": "Global debug mode (log to browser console)", "type": "checkbox" }
+    ],
+
+    "project-settings": [
+        {
+            "key": "override",
+            "name": "<b>Override global settings</b> and use the project-specific provider configuration below.",
+            "type": "checkbox"
+        },
+        {
+            "key": "always",
+            "name": "Always require the check (present on every survey load, not just once per session)",
+            "type": "checkbox"
+        },
+        {
+            "key": "p_provider",
+            "name": "Bot-check provider (this project)",
+            "type": "dropdown",
+            "choices": [
+                { "value": "none",         "name": "None (disabled)" },
+                { "value": "turnstile",    "name": "Cloudflare Turnstile" },
+                { "value": "recaptcha_v3", "name": "Google reCAPTCHA v3" },
+                { "value": "hcaptcha",     "name": "hCaptcha" },
+                { "value": "friendly",     "name": "Friendly Captcha" },
+                { "value": "mcaptcha",     "name": "mCaptcha (self-hosted)" }
+            ],
+            "branchingLogic": { "conditions": [ { "field": "override", "value": true } ] }
+        },
+
+        { "key": "p_turnstile_sitekey", "name": "Turnstile — Site key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "turnstile" } ] } },
+        { "key": "p_turnstile_secret", "name": "Turnstile — Secret key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "turnstile" } ] } },
+
+        { "key": "p_recaptcha_sitekey", "name": "reCAPTCHA v3 — Site key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "recaptcha_v3" } ] } },
+        { "key": "p_recaptcha_secret", "name": "reCAPTCHA v3 — Secret key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "recaptcha_v3" } ] } },
+        { "key": "p_recaptcha_threshold", "name": "reCAPTCHA v3 — Minimum passing score (0.0–1.0, default 0.5)", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "recaptcha_v3" } ] } },
+
+        { "key": "p_hcaptcha_sitekey", "name": "hCaptcha — Site key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "hcaptcha" } ] } },
+        { "key": "p_hcaptcha_secret", "name": "hCaptcha — Secret key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "hcaptcha" } ] } },
+
+        { "key": "p_friendly_sitekey", "name": "Friendly Captcha — Site key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "friendly" } ] } },
+        { "key": "p_friendly_secret", "name": "Friendly Captcha — API key (secret)", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "friendly" } ] } },
+
+        { "key": "p_mcaptcha_instance", "name": "mCaptcha — Instance base URL", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
+        { "key": "p_mcaptcha_sitekey", "name": "mCaptcha — Site key", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
+        { "key": "p_mcaptcha_secret", "name": "mCaptcha — Account secret", "type": "text",
+          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
+
+        { "key": "p_debug", "name": "Project debug mode (log to browser console)", "type": "checkbox" }
+    ]
+}
