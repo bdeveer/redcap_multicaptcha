@@ -15,8 +15,42 @@ Get test keys here (links are also shown in the module config UI):
 | Friendly Captcha | https://developer.friendlycaptcha.com/docs/getting-started/client (hub: https://developer.friendlycaptcha.com/) |
 | mCaptcha | self-hosted; create a sitekey on your instance (docs: https://mcaptcha.org/docs/) |
 
-> Turnstile, reCAPTCHA, and hCaptcha all publish **test/dummy keys** that always
-> pass or always fail — use those to exercise the pass/fail paths without a real account.
+### Dummy test keys (no account needed)
+
+Use these published test keys to exercise the pass/fail paths. They work from any
+domain, including localhost.
+
+**Cloudflare Turnstile**
+
+| Scenario | Site key | Secret key |
+|---|---|---|
+| Always passes | `1x00000000000000000000AA` | `1x0000000000000000000000000000000AA` |
+| Always blocks / fails | `2x00000000000000000000AB` | `2x0000000000000000000000000000000AA` |
+| Forces interactive challenge | `3x00000000000000000000FF` | (pair with a pass/fail secret above) |
+
+Dummy site keys return a `XXXX.DUMMY.TOKEN.XXXX` token, which only the dummy
+secrets will accept — don't mix dummy keys with a production secret.
+
+**hCaptcha**
+
+| Scenario | Site key | Secret key |
+|---|---|---|
+| Always passes (never challenges) | `10000000-ffff-ffff-ffff-000000000001` | `0x0000000000000000000000000000000000000000` |
+
+For an always-**fail** check, tamper with the returned token before submit, or use
+a real key with a mismatched secret.
+
+**Google reCAPTCHA v3** — Google's public test keys are **v2 only**; there are no
+always-pass v3 keys. Test v3 with your own low-traffic key, and verify the
+threshold logic by temporarily setting the passing score very high (e.g. `0.9`) so
+a normal visit is rejected, then back to `0.5`.
+
+**Friendly Captcha / mCaptcha** — no dummy keys; test with a real (free) sitekey or
+your self-hosted instance.
+
+Sources: [Cloudflare Turnstile testing](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) ·
+[hCaptcha docs](https://docs.hcaptcha.com/) ·
+[reCAPTCHA FAQ](https://developers.google.com/recaptcha/docs/faq)
 
 ## Preconditions
 
