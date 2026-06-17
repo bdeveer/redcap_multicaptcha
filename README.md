@@ -70,7 +70,7 @@ provider's key fields.
 | Cloudflare Turnstile | [Cloudflare dashboard → Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) | [Setup docs](https://developers.cloudflare.com/turnstile/get-started/) |
 | Google reCAPTCHA v3 | [reCAPTCHA admin console](https://www.google.com/recaptcha/admin/create) (choose **v3**) | [v3 docs](https://developers.google.com/recaptcha/docs/v3) |
 | hCaptcha | [hCaptcha dashboard](https://dashboard.hcaptcha.com/signup) | [Developer docs](https://docs.hcaptcha.com/) |
-| Friendly Captcha | [Getting started](https://developer.friendlycaptcha.com/docs/getting-started/client) | [Developer hub](https://developer.friendlycaptcha.com/) |
+| Friendly Captcha | [Create a sitekey](https://developer.friendlycaptcha.com/docs/v2/getting-started/setup) | [Developer hub](https://developer.friendlycaptcha.com/) |
 
 Turnstile, reCAPTCHA, and hCaptcha all publish always-pass / always-fail **test
 keys** you can use to exercise both paths without a real account.

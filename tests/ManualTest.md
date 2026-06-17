@@ -12,7 +12,7 @@ Get test keys here (links are also shown in the module config UI):
 | Cloudflare Turnstile | https://dash.cloudflare.com/?to=/:account/turnstile (docs: https://developers.cloudflare.com/turnstile/get-started/) |
 | Google reCAPTCHA v3 | https://www.google.com/recaptcha/admin/create — choose **reCAPTCHA v3** (docs: https://developers.google.com/recaptcha/docs/v3) |
 | hCaptcha | https://dashboard.hcaptcha.com/signup (docs: https://docs.hcaptcha.com/) |
-| Friendly Captcha | https://developer.friendlycaptcha.com/docs/getting-started/client (hub: https://developer.friendlycaptcha.com/) |
+| Friendly Captcha | https://developer.friendlycaptcha.com/docs/v2/getting-started/setup (hub: https://developer.friendlycaptcha.com/) |
 
 ### Dummy test keys (no account needed)
 

@@ -71,7 +71,7 @@
           "branchingLogic": { "conditions": [ { "field": "provider", "value": "hcaptcha" } ] } },
 
         { "key": "friendly_help", "type": "descriptive",
-          "name": "<b>Friendly Captcha.</b> Create an application + API key: <a href='https://developer.friendlycaptcha.com/docs/getting-started/client' target='_blank'>Getting started</a> &middot; <a href='https://developer.friendlycaptcha.com/' target='_blank'>Developer hub</a>. <i>This module targets the v1 siteverify endpoint.</i>",
+          "name": "<b>Friendly Captcha.</b> Create an application + API key: <a href='https://developer.friendlycaptcha.com/docs/v2/getting-started/setup' target='_blank'>Create a sitekey</a> &middot; <a href='https://developer.friendlycaptcha.com/' target='_blank'>Developer hub</a>. <i>This module targets the v1 siteverify endpoint.</i>",
           "branchingLogic": { "conditions": [ { "field": "provider", "value": "friendly" } ] } },
         { "key": "friendly_sitekey", "name": "Friendly Captcha — Site key", "type": "text",
           "branchingLogic": { "conditions": [ { "field": "provider", "value": "friendly" } ] } },
@@ -138,7 +138,7 @@
           "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "hcaptcha" } ] } },
 
         { "key": "p_friendly_help", "type": "descriptive",
-          "name": "<b>Friendly Captcha.</b> Create an application + API key: <a href='https://developer.friendlycaptcha.com/docs/getting-started/client' target='_blank'>Getting started</a> &middot; <a href='https://developer.friendlycaptcha.com/' target='_blank'>Developer hub</a>. <i>This module targets the v1 siteverify endpoint.</i>",
+          "name": "<b>Friendly Captcha.</b> Create an application + API key: <a href='https://developer.friendlycaptcha.com/docs/v2/getting-started/setup' target='_blank'>Create a sitekey</a> &middot; <a href='https://developer.friendlycaptcha.com/' target='_blank'>Developer hub</a>. <i>This module targets the v1 siteverify endpoint.</i>",
           "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "friendly" } ] } },
         { "key": "p_friendly_sitekey", "name": "Friendly Captcha — Site key", "type": "text",
           "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "friendly" } ] } },
