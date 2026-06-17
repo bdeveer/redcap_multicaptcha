@@ -179,6 +179,25 @@ redcap_multicaptcha/                  (install as multicaptcha_v<version>)
   provider callback never fires; server-side verification still gates entry.
 - Consider rate-limiting / logging failed attempts if abuse is a concern.
 
+## Security scanning
+
+The module passes the Consortium's `bin/scan` (phpcs + Psalm taint analysis) with
+**one expected false positive**:
+
+> `TaintedSSRF` in `classes/CaptchaProvider.php` — user input (the visitor's
+> CAPTCHA token from `$_POST`) flows into a cURL request body.
+
+This is **not** an SSRF. SSRF requires an attacker-influenced request *URL*; here
+the URL is a hardcoded provider verification endpoint
+(`challenges.cloudflare.com`, `www.google.com/recaptcha`, `api.hcaptcha.com`,
+`global.frcapi.com`). Sending the visitor's token to that fixed endpoint in the
+POST body is exactly the intended verification step, and no PHI is transmitted
+(the token plus, optionally, the visitor IP). The relevant lines carry a
+`@psalm-suppress TaintedSSRF` annotation documenting this; note the scan does not
+honor inline suppressions for taint findings, so it remains in the report and is
+declared here as a reviewed false positive per the scan's own guidance
+(`redcap-external-module-framework@vumc.org`).
+
 ## Credit
 
 Gate strategy modeled on **nedCAPTCHA** by Günther A. Rezniczek
