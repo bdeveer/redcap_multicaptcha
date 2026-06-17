@@ -29,11 +29,12 @@ class FriendlyCaptchaProvider extends CaptchaProvider
 
     public function getWidgetHtml()
     {
-        // data-start="auto" solves the proof-of-work on load; the SDK emits a
-        // "frc:widget.complete" DOM event when done, which enables the button.
-        // (The ui.html 8s fallback also enables it, so the visitor is never stuck.)
+        // data-start="auto" solves the proof-of-work on load. data-form-field-name
+        // pins the hidden field name so the POSTed token matches getResponseField()
+        // regardless of the v2 default. The "frc:widget.complete" event enables the
+        // submit button (the ui.html 8s fallback also does, so nobody gets stuck).
         return '<div class="frc-captcha" data-sitekey="' . $this->attr($this->cfg["sitekey"]) . '" '
-             . 'data-start="auto"></div>'
+             . 'data-start="auto" data-form-field-name="' . $this->getResponseField() . '"></div>'
              . '<script>document.addEventListener("frc:widget.complete", function(){'
              . 'if(typeof mc_enableSubmit==="function")mc_enableSubmit();});</script>';
     }
