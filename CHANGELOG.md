@@ -8,7 +8,7 @@ Initial release (scaffold).
 
 - Gate public surveys with a pluggable bot-check provider.
 - Supported providers: Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha,
-  Friendly Captcha, mCaptcha.
+  Friendly Captcha.
 - Global default configuration with optional per-project override.
 - "Always require" option to challenge on every survey load.
 - Provider abstraction (`CaptchaProvider` + factory): adding a provider is one

@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this External Module, please cite it as below, in addition to citing REDCap."
 title: "Multi-CAPTCHA (REDCap External Module)"
-abstract: "A REDCap External Module that protects public surveys with a pluggable bot-check provider (Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha, Friendly Captcha, or mCaptcha), configurable globally or per project."
+abstract: "A REDCap External Module that protects public surveys with a pluggable bot-check provider (Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha, or Friendly Captcha), configurable globally or per project."
 type: software
 authors:
   - given-names: Bas

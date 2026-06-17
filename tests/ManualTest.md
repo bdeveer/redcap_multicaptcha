@@ -13,7 +13,6 @@ Get test keys here (links are also shown in the module config UI):
 | Google reCAPTCHA v3 | https://www.google.com/recaptcha/admin/create — choose **reCAPTCHA v3** (docs: https://developers.google.com/recaptcha/docs/v3) |
 | hCaptcha | https://dashboard.hcaptcha.com/signup (docs: https://docs.hcaptcha.com/) |
 | Friendly Captcha | https://developer.friendlycaptcha.com/docs/getting-started/client (hub: https://developer.friendlycaptcha.com/) |
-| mCaptcha | self-hosted; create a sitekey on your instance (docs: https://mcaptcha.org/docs/) |
 
 ### Dummy test keys (no account needed)
 
@@ -45,8 +44,7 @@ always-pass v3 keys. Test v3 with your own low-traffic key, and verify the
 threshold logic by temporarily setting the passing score very high (e.g. `0.9`) so
 a normal visit is rejected, then back to `0.5`.
 
-**Friendly Captcha / mCaptcha** — no dummy keys; test with a real (free) sitekey or
-your self-hosted instance.
+**Friendly Captcha** — no dummy keys; test with a real (free) sitekey.
 
 Sources: [Cloudflare Turnstile testing](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) ·
 [hCaptcha docs](https://docs.hcaptcha.com/) ·
@@ -92,7 +90,6 @@ Repeat A (pass) and C (fail) for each provider you intend to support:
 - [ ] Google reCAPTCHA v3 (also: set threshold high → low score is rejected)
 - [ ] hCaptcha
 - [ ] Friendly Captcha
-- [ ] mCaptcha (confirm widget markup + `siteverify` payload against your instance version)
 
 ## F. Non-targets (should NOT be gated)
 

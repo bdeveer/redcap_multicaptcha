@@ -193,7 +193,6 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
                 "sitekey"   => $this->getProjectSetting("p_{$id}_sitekey"),
                 "secret"    => $this->getProjectSetting("p_{$id}_secret"),
                 "threshold" => $this->getProjectSetting("p_recaptcha_threshold"),
-                "instance"  => $this->getProjectSetting("p_mcaptcha_instance"),
             );
         } else {
             $id  = $this->getSystemSetting("provider");
@@ -201,7 +200,6 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
                 "sitekey"   => $this->getSystemSetting("{$id}_sitekey"),
                 "secret"    => $this->getSystemSetting("{$id}_secret"),
                 "threshold" => $this->getSystemSetting("recaptcha_threshold"),
-                "instance"  => $this->getSystemSetting("mcaptcha_instance"),
             );
         }
 

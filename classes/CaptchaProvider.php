@@ -33,7 +33,7 @@ abstract class CaptchaProvider
 
     /**
      * Widget markup placed inside the gate form. Most providers inject their
-     * own hidden token field; reCAPTCHA v3 / mCaptcha get a little glue JS here.
+     * own hidden token field; reCAPTCHA v3 gets a little glue JS here.
      */
     abstract public function getWidgetHtml();
 

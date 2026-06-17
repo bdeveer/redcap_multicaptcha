@@ -1,7 +1,7 @@
 {
     "name": "Multi-CAPTCHA",
     "namespace": "YALE\\MultiCaptchaExternalModule",
-    "description": "Protect public surveys with a CAPTCHA / bot-check service of your choice (Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha, Friendly Captcha, or mCaptcha). Configurable globally with optional per-project override.",
+    "description": "Protect public surveys with a CAPTCHA / bot-check service of your choice (Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha, or Friendly Captcha). Configurable globally with optional per-project override.",
     "authors": [
         {
             "name": "Bas de Veer",
@@ -40,8 +40,7 @@
                 { "value": "turnstile",    "name": "Cloudflare Turnstile" },
                 { "value": "recaptcha_v3", "name": "Google reCAPTCHA v3" },
                 { "value": "hcaptcha",     "name": "hCaptcha" },
-                { "value": "friendly",     "name": "Friendly Captcha" },
-                { "value": "mcaptcha",     "name": "mCaptcha (self-hosted)" }
+                { "value": "friendly",     "name": "Friendly Captcha" }
             ]
         },
 
@@ -79,16 +78,6 @@
         { "key": "friendly_secret", "name": "Friendly Captcha — API key (secret)", "type": "text",
           "branchingLogic": { "conditions": [ { "field": "provider", "value": "friendly" } ] } },
 
-        { "key": "mcaptcha_help", "type": "descriptive",
-          "name": "<b>mCaptcha (self-hosted).</b> You run the server yourself, then create a sitekey on your instance: <a href='https://mcaptcha.org/docs/' target='_blank'>mCaptcha docs</a> &middot; <a href='https://mcaptcha.org/' target='_blank'>Project site</a>",
-          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
-        { "key": "mcaptcha_instance", "name": "mCaptcha — Instance base URL (e.g. https://mcaptcha.example.org)", "type": "text",
-          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
-        { "key": "mcaptcha_sitekey", "name": "mCaptcha — Site key", "type": "text",
-          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
-        { "key": "mcaptcha_secret", "name": "mCaptcha — Account secret", "type": "text",
-          "branchingLogic": { "conditions": [ { "field": "provider", "value": "mcaptcha" } ] } },
-
         { "key": "debug", "name": "Global debug mode (log to browser console)", "type": "checkbox" }
     ],
 
@@ -117,8 +106,7 @@
                 { "value": "turnstile",    "name": "Cloudflare Turnstile" },
                 { "value": "recaptcha_v3", "name": "Google reCAPTCHA v3" },
                 { "value": "hcaptcha",     "name": "hCaptcha" },
-                { "value": "friendly",     "name": "Friendly Captcha" },
-                { "value": "mcaptcha",     "name": "mCaptcha (self-hosted)" }
+                { "value": "friendly",     "name": "Friendly Captcha" }
             ],
             "branchingLogic": { "conditions": [ { "field": "override", "value": true } ] }
         },
@@ -156,16 +144,6 @@
           "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "friendly" } ] } },
         { "key": "p_friendly_secret", "name": "Friendly Captcha — API key (secret)", "type": "text",
           "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "friendly" } ] } },
-
-        { "key": "p_mcaptcha_help", "type": "descriptive",
-          "name": "<b>mCaptcha (self-hosted).</b> You run the server yourself, then create a sitekey on your instance: <a href='https://mcaptcha.org/docs/' target='_blank'>mCaptcha docs</a> &middot; <a href='https://mcaptcha.org/' target='_blank'>Project site</a>",
-          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
-        { "key": "p_mcaptcha_instance", "name": "mCaptcha — Instance base URL", "type": "text",
-          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
-        { "key": "p_mcaptcha_sitekey", "name": "mCaptcha — Site key", "type": "text",
-          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
-        { "key": "p_mcaptcha_secret", "name": "mCaptcha — Account secret", "type": "text",
-          "branchingLogic": { "type": "and", "conditions": [ { "field": "override", "value": true }, { "field": "p_provider", "value": "mcaptcha" } ] } },
 
         { "key": "p_debug", "name": "Project debug mode (log to browser console)", "type": "checkbox" }
     ]
