@@ -58,10 +58,6 @@ abstract class CaptchaProvider
      * JSON string (when $json = true). $headers is an optional list of extra
      * HTTP header strings (e.g. "X-API-Key: ...").
      * @return array|null Decoded JSON response, or null on transport failure.
-     *
-     * @psalm-suppress TaintedSSRF The request URL is a hardcoded provider verify
-     *   endpoint (never user-controlled); sending the visitor's CAPTCHA token to it
-     *   in the POST body is exactly the intended operation. No PHI is transmitted.
      */
     protected function httpPost($url, $body, $json = false, $headers = array())
     {
@@ -71,10 +67,14 @@ abstract class CaptchaProvider
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         $hdrs = is_array($headers) ? $headers : array();
+        // The token in $body is sent to a hardcoded provider verify endpoint (never
+        // a user-controlled URL), which is the intended CAPTCHA-verification flow.
         if ($json) {
             $hdrs[] = "Content-Type: application/json";
+            /** @psalm-suppress TaintedSSRF hardcoded provider verify endpoint */
             curl_setopt($ch, CURLOPT_POSTFIELDS, is_string($body) ? $body : json_encode($body));
         } else {
+            /** @psalm-suppress TaintedSSRF hardcoded provider verify endpoint */
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
         }
         if (!empty($hdrs)) curl_setopt($ch, CURLOPT_HTTPHEADER, $hdrs);
