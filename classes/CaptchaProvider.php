@@ -58,6 +58,10 @@ abstract class CaptchaProvider
      * JSON string (when $json = true). $headers is an optional list of extra
      * HTTP header strings (e.g. "X-API-Key: ...").
      * @return array|null Decoded JSON response, or null on transport failure.
+     *
+     * @psalm-suppress TaintedSSRF The request URL is a hardcoded provider verify
+     *   endpoint (never user-controlled); sending the visitor's CAPTCHA token to it
+     *   in the POST body is exactly the intended operation. No PHI is transmitted.
      */
     protected function httpPost($url, $body, $json = false, $headers = array())
     {
@@ -76,7 +80,8 @@ abstract class CaptchaProvider
         if (!empty($hdrs)) curl_setopt($ch, CURLOPT_HTTPHEADER, $hdrs);
         $raw = curl_exec($ch);
         $err = curl_error($ch);
-        curl_close($ch);
+        // Note: curl_close() intentionally omitted — it is a no-op on PHP 8+ and
+        // deprecated in 8.5; the handle is freed when $ch goes out of scope.
         if ($raw === false || $raw === "") {
             return array("_transport_error" => $err ?: "Empty response from $url");
         }
