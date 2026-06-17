@@ -192,14 +192,14 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
             $cfg = array(
                 "sitekey"   => $this->getProjectSetting("p_{$id}_sitekey"),
                 "secret"    => $this->getProjectSetting("p_{$id}_secret"),
-                "threshold" => $this->getProjectSetting("p_recaptcha_threshold"),
+                "threshold" => $this->getProjectSetting("p_recaptcha_v3_threshold"),
             );
         } else {
             $id  = $this->getSystemSetting("provider");
             $cfg = array(
                 "sitekey"   => $this->getSystemSetting("{$id}_sitekey"),
                 "secret"    => $this->getSystemSetting("{$id}_secret"),
-                "threshold" => $this->getSystemSetting("recaptcha_threshold"),
+                "threshold" => $this->getSystemSetting("recaptcha_v3_threshold"),
             );
         }
 
