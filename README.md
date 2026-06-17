@@ -98,6 +98,45 @@ submission. It gates **entry** to the survey:
 Only two things differ per provider — **render the widget** and **verify the
 token** — so adding a new service is one class plus one line in the factory.
 
+## Known incompatibilities (other survey-gate modules)
+
+This module takes over the public survey's first page via `redcap_survey_page_top`
++ `exitAfterHook()`. **Any other module that gates the same survey page the same
+way will conflict**: the framework runs same-hook modules in sequence and the
+first one to call `exitAfterHook()` ends the request, so the other never runs on
+that page load. Module execution order is effectively the install order and is
+**not** adjustable in the Control Center UI, so you can't reliably guarantee which
+gate appears first.
+
+The practical consequence: if a gate/auth module runs before Multi-CAPTCHA, it
+renders first; once it establishes a record/auth context, Multi-CAPTCHA's
+"no record yet" guard makes it skip — so **the CAPTCHA may never display**. Always
+test the combined public-survey flow.
+
+Modules known to gate the survey page (from the REDCap External Module repo):
+
+| Module | Author | Notes |
+|---|---|---|
+| **REDCap PRO** (`redcappro`) | Andrew Poppe (Yale CCI) | Participant login/auth for Part 11. Renders a login on the survey page. In testing it runs before Multi-CAPTCHA, so the CAPTCHA is bypassed. |
+| **REDCap Survey Auth** (`redcap_survey_auth`) | Günther Rezniczek | Login gate for surveys/public dashboards/reports. Only gates instruments carrying the `@SURVEY-AUTH` action tag, so the conflict is limited to those. |
+| **nedCAPTCHA** (`nedcaptcha`) | Günther Rezniczek | Local (no-external-service) CAPTCHA gate for public surveys. Running it *and* Multi-CAPTCHA is redundant and conflicting — pick one. (Newer v2 behaves the same way.) |
+| Other reCAPTCHA modules (e.g. Stanford `redcaptcha`) | various | Survey CAPTCHA gates. Note: basic reCAPTCHA v2 is also built into REDCap core. |
+
+**Guidance for stacking with an auth module (e.g. REDCap PRO):**
+
+- They coexist fine *system-wide* — the issue only arises when **both are enabled
+  on the same project and the same public survey**. Prefer using Multi-CAPTCHA on
+  open public surveys and the auth module where authentication is required.
+- Do **not** enable Multi-CAPTCHA's *"always require the check"* when stacked — the
+  auth module's reloads/redirects would re-trigger the CAPTCHA repeatedly.
+- If you truly need a bot check *in front of* an auth login, that belongs inside
+  the auth module (a CAPTCHA-on-login feature), not as a competing gate.
+
+When Multi-CAPTCHA detects one of these enabled on the same project, it shows a
+warning in its project configuration dialog (it only warns — it does not change
+behavior). The detected set is a curated list of survey-auth modules plus any
+other module whose prefix contains `captcha`.
+
 ## File layout
 
 ```

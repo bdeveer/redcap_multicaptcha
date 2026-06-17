@@ -112,6 +112,67 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
     }
 
     /**
+     * Show a warning in the project config dialog when another survey-gate module
+     * is enabled on this project. Such modules also act on redcap_survey_page_top
+     * and call exitAfterHook(); whichever runs first (per module load order) wins,
+     * so the CAPTCHA may not appear. This only informs — it does not change behavior.
+     */
+    function redcap_module_configuration_settings($project_id, $settings)
+    {
+        if (empty($project_id)) return $settings; // project config only
+        $conflicts = $this->detectConflictingModules();
+        if (!empty($conflicts)) {
+            $names = htmlspecialchars(implode(", ", $conflicts), ENT_QUOTES, "UTF-8");
+            $warning = array(
+                "key"  => "mc-conflict-warning",
+                "type" => "descriptive",
+                "name" => "<div class='yellow' style='padding:8px;border-radius:4px;'>"
+                        . "<b>&#9888; Possible survey-gate conflict.</b> These enabled module(s) also take over the "
+                        . "survey page and may run <i>before</i> this CAPTCHA depending on module load order: <b>$names</b>. "
+                        . "If a gate/authentication module runs first, the CAPTCHA may never display. "
+                        . "Test the public survey flow, and see \"Known incompatibilities\" in the module README."
+                        . "</div>",
+            );
+            array_unshift($settings, $warning);
+        }
+        return $settings;
+    }
+
+    /**
+     * Names of other enabled modules on this project that gate the survey page.
+     * Matches a curated list of survey-auth modules plus any other CAPTCHA module
+     * (normalized prefix contains "captcha"). Does not instantiate other modules.
+     */
+    private function detectConflictingModules()
+    {
+        $found = array();
+        $pid = $this->getProjectId();
+        if (!$pid || !class_exists("\\ExternalModules\\ExternalModules")) return $found;
+
+        $enabled = \ExternalModules\ExternalModules::getEnabledModules($pid);
+        if (!is_array($enabled)) return $found;
+
+        // Normalized prefix => friendly name for known survey-gate / auth modules.
+        $knownGates = array(
+            "redcappro"        => "REDCap PRO",
+            "surveyauth"       => "REDCap Survey Auth",
+            "redcapsurveyauth" => "REDCap Survey Auth",
+        );
+        $selfNorm = preg_replace('/[^a-z0-9]/', '', strtolower($this->PREFIX));
+
+        foreach (array_keys($enabled) as $prefix) {
+            $norm = preg_replace('/[^a-z0-9]/', '', strtolower($prefix));
+            if ($norm === $selfNorm) continue;
+            if (isset($knownGates[$norm])) {
+                $found[$knownGates[$norm]] = true;
+            } else if (strpos($norm, "captcha") !== false) {
+                $found[$prefix . " (another CAPTCHA module)"] = true;
+            }
+        }
+        return array_keys($found);
+    }
+
+    /**
      * Decide which provider + settings to use (project override or global default)
      * and instantiate the provider. Returns false if disabled / unconfigured.
      */
