@@ -38,7 +38,7 @@ provider's own page before committing, as these change.*
 | **Cloudflare Turnstile** | Free, effectively unlimited | Invisible (usually no click) | GDPR/CCPA/ePrivacy compliant; **no cookie-consent banner needed**; no PII tracking. Traffic transits Cloudflare's global network, so strict **EU data residency** needs enterprise data-localization. | Easiest all-round choice; quickest setup. |
 | **Google reCAPTCHA v3** | Free only to **10,000 assessments/month per org** (cut in 2025); then ~$8/mo to 100k, ~$1 per 1,000 after | Invisible, score-based | Sends data to Google (US transfer); in the EU **typically requires a consent banner**. Weakest privacy posture of the four. | Most familiar/documented, but the score needs threshold tuning and the privacy story is the hardest to defend for human-subjects data. |
 | **hCaptcha** | Free to **100,000 verifications/month**; Pro ≈ $99–139/mo | Often a visible click/challenge (more friction than the invisible options) | Privacy-focused, no PII collected; works in essentially every country. | Good free headroom; expect occasional visible challenges for participants. |
-| **Friendly Captcha** | Free tier for non-commercial; paid from ≈ €9/mo (Starter, 1k req) / €39/mo (Growth, 5k req); **EU-only endpoint needs the ≈ €200/mo Advanced plan** | Invisible (proof-of-work) | German company, EU servers, GDPR/CCPA, **no cookies/no banner**, accessibility-compliant (WCAG/EAA). Strongest fit for EU/GDPR among these options. | This module targets the **v1** siteverify endpoint; v2 sites use a different host + header (see caveats). |
+| **Friendly Captcha** | Free tier for non-commercial; paid from ≈ €9/mo (Starter, 1k req) / €39/mo (Growth, 5k req); **EU-only endpoint needs the ≈ €200/mo Advanced plan** | Invisible (proof-of-work) | German company, EU servers, GDPR/CCPA, **no cookies/no banner**, accessibility-compliant (WCAG/EAA). Strongest fit for EU/GDPR among these options. | Uses the Friendly Captcha **v2** API (current). For EU data residency you can point it at the EU endpoint (see caveats). |
 
 ### Quick guidance
 
@@ -171,8 +171,10 @@ redcap_multicaptcha/                  (install as multicaptcha_v<version>)
 
 ## Known caveats / TODO
 
-- **Friendly Captcha** here targets the **v1** endpoint; v2 sites use
-  `global.frcapi.com` + an `X-API-Key` header.
+- **Friendly Captcha** uses the **v2** API (`global.frcapi.com`, API key in an
+  `X-API-Key` header). For EU data residency, change the endpoint host to
+  `eu.frcapi.com` in `FriendlyCaptchaProvider::verify()`. Legacy v1 sitekeys are
+  not supported.
 - The 8-second submit-enable safety net in `ui.html` prevents lockout if a
   provider callback never fires; server-side verification still gates entry.
 - Consider rate-limiting / logging failed attempts if abuse is a concern.

@@ -3,12 +3,17 @@
 require_once "CaptchaProvider.php";
 
 /**
- * Friendly Captcha. Proof-of-work, no interaction, GDPR/EU-oriented.
- * This implementation targets the v1 widget + siteverify endpoint.
+ * Friendly Captcha (v2). Proof-of-work, no interaction, GDPR/EU-oriented.
  * Docs: https://developer.friendlycaptcha.com/
  *
- * NOTE: Friendly Captcha v2 uses a different endpoint (global.frcapi.com) and
- * an "X-API-Key" header. If you provision a v2 site, adjust verify() accordingly.
+ * v2 vs v1: the widget element (.frc-captcha) and the hidden form field
+ * (frc-captcha-solution) are unchanged, but the client script and the
+ * server-side verification differ:
+ *   - script: @friendlycaptcha/sdk "site" build (auto-binds .frc-captcha)
+ *   - verify: POST JSON to global.frcapi.com/api/v2/captcha/siteverify
+ *             with the API key in an X-API-Key header (not the body)
+ *
+ * EU data residency: swap the endpoint for https://eu.frcapi.com/... if needed.
  */
 class FriendlyCaptchaProvider extends CaptchaProvider
 {
@@ -17,35 +22,42 @@ class FriendlyCaptchaProvider extends CaptchaProvider
 
     public function getScriptHtml()
     {
+        // v2 auto-widget build: binds to any .frc-captcha element on the page.
         return '<script type="module" '
-             . 'src="https://cdn.jsdelivr.net/npm/friendly-challenge@0.9.18/widget.module.min.js" async defer></script>'
-             . '<script nomodule '
-             . 'src="https://cdn.jsdelivr.net/npm/friendly-challenge@0.9.18/widget.min.js" async defer></script>';
+             . 'src="https://cdn.jsdelivr.net/npm/@friendlycaptcha/sdk@0/site.min.js" async defer></script>';
     }
 
     public function getWidgetHtml()
     {
-        // Injects a hidden input named "frc-captcha-solution".
+        // data-start="auto" solves the proof-of-work on load; the SDK emits a
+        // "frc:widget.complete" DOM event when done, which enables the button.
+        // (The ui.html 8s fallback also enables it, so the visitor is never stuck.)
         return '<div class="frc-captcha" data-sitekey="' . $this->attr($this->cfg["sitekey"]) . '" '
-             . 'data-callback="mc_enableSubmit"></div>';
+             . 'data-start="auto"></div>'
+             . '<script>document.addEventListener("frc:widget.complete", function(){'
+             . 'if(typeof mc_enableSubmit==="function")mc_enableSubmit();});</script>';
     }
 
     public function getResponseField() { return "frc-captcha-solution"; }
 
     public function verify($token, $remoteIp = null)
     {
-        $r = $this->httpPost("https://api.friendlycaptcha.com/api/v1/siteverify", array(
-            "solution" => $token,
-            "secret"   => $this->cfg["secret"],
-            "sitekey"  => $this->cfg["sitekey"],
-        ));
+        $r = $this->httpPost(
+            "https://global.frcapi.com/api/v2/captcha/siteverify",
+            array("response" => $token, "sitekey" => $this->cfg["sitekey"]),
+            true,
+            array("X-API-Key: " . $this->cfg["secret"])
+        );
         if (isset($r["_transport_error"])) {
             return array("success" => false, "error" => $r["_transport_error"], "score" => null);
         }
-        return array(
-            "success" => !empty($r["success"]),
-            "error"   => !empty($r["success"]) ? null : implode(", ", (array)($r["errors"] ?? array("verification failed"))),
-            "score"   => null,
-        );
+        $ok = !empty($r["success"]);
+        $err = null;
+        if (!$ok) {
+            // v2 returns a single error object: { error_code, detail }.
+            $err = isset($r["error"]["error_code"]) ? $r["error"]["error_code"]
+                 : (isset($r["error"]["detail"]) ? $r["error"]["detail"] : "verification failed");
+        }
+        return array("success" => $ok, "error" => $err, "score" => null);
     }
 }

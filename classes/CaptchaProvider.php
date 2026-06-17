@@ -55,22 +55,25 @@ abstract class CaptchaProvider
     /**
      * Small cURL helper shared by all providers.
      * $body may be an array (sent as application/x-www-form-urlencoded) or a
-     * JSON string (when $json = true).
+     * JSON string (when $json = true). $headers is an optional list of extra
+     * HTTP header strings (e.g. "X-API-Key: ...").
      * @return array|null Decoded JSON response, or null on transport failure.
      */
-    protected function httpPost($url, $body, $json = false)
+    protected function httpPost($url, $body, $json = false, $headers = array())
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        $hdrs = is_array($headers) ? $headers : array();
         if ($json) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+            $hdrs[] = "Content-Type: application/json";
             curl_setopt($ch, CURLOPT_POSTFIELDS, is_string($body) ? $body : json_encode($body));
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
         }
+        if (!empty($hdrs)) curl_setopt($ch, CURLOPT_HTTPHEADER, $hdrs);
         $raw = curl_exec($ch);
         $err = curl_error($ch);
         curl_close($ch);
