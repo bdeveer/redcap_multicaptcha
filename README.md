@@ -140,7 +140,7 @@ other module whose prefix contains `captcha`.
 ## File layout
 
 ```
-multicaptcha_em/
+redcap_multicaptcha/                  (install as multicaptcha_v<version>)
 ├── config.json                       System + project settings (provider dropdowns, keys)
 ├── MultiCaptchaExternalModule.php    The gate logic (provider-agnostic)
 ├── ui.html                           Interstitial challenge page template
