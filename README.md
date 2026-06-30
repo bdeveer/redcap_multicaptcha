@@ -75,6 +75,18 @@ provider's key fields.
 Turnstile, reCAPTCHA, and hCaptcha all publish always-pass / always-fail **test
 keys** you can use to exercise both paths without a real account.
 
+### Using one keypair across multiple servers
+
+Each provider binds a sitekey to a specific list of **allowed domains / hostnames**.
+If you want to reuse the *same* sitekey + secret on more than one REDCap server
+(e.g. a personal dev box and an institutional test server), you must **add every
+server's hostname to that sitekey's allowed-domains list** in the provider's
+dashboard. A sitekey will silently fail verification on any hostname that isn't
+registered, so a keypair that works on one server will appear broken on another
+until its domain is added. (Alternatively, create a separate sitekey per server.)
+This applies to all four providers — Turnstile, reCAPTCHA v3, hCaptcha, and
+Friendly Captcha.
+
 ## How it works (the gate pattern)
 
 REDCap has no clean hook to *reject a survey submission*. So this module — like
