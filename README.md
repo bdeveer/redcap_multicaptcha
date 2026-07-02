@@ -4,8 +4,9 @@ Protect public surveys with a bot-check / CAPTCHA service of your choice. Built 
 **provider-pluggable** module: an admin picks a provider globally, and individual
 projects can override with their own provider and keys.
 
-> **Status: scaffold / mock-up.** This is a working skeleton intended for a dev
-> instance, not a vetted production release. Test each provider before relying on it.
+> **Status:** first public release. Feature-complete across all four providers.
+> As with any survey-facing module, test each provider you intend to use in your
+> own REDCap environment before relying on it in production.
 
 ## Why this exists
 
@@ -161,9 +162,9 @@ redcap_multicaptcha/                  (install as multicaptcha_v<version>)
     └── FriendlyCaptchaProvider.php
 ```
 
-## Install (dev instance)
+## Install
 
-1. Copy this folder to `<redcap-root>/modules/multicaptcha_v0.1.0`
+1. Copy this folder to `<redcap-root>/modules/multicaptcha_v1.0.0`
    (the `_vX.Y.Z` suffix is required by the EM framework).
 2. Edit the `authors` block in `config.json`.
 3. Control Center → External Modules → enable **Multi-CAPTCHA**.

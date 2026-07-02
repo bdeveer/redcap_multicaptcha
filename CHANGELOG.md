@@ -2,9 +2,9 @@
 
 All notable changes to this module are documented here.
 
-## v0.1.0 — 2026-06-15
+## v1.0.0 — 2026-07-02
 
-Initial release (scaffold).
+Initial public release.
 
 - Gate public surveys with a pluggable bot-check provider.
 - Supported providers: Cloudflare Turnstile, Google reCAPTCHA v3, hCaptcha,
