@@ -18,3 +18,4 @@ Initial public release.
 - Server-side token verification per provider; fails closed on error.
 - Provider key/setup links shown directly in the configuration UI.
 - Manual test checklist with published dummy test keys.
+- Built on External Module Framework v16 (REDCap 15.0.9+ LTS / 14.6.4+ standard).

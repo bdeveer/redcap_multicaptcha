@@ -9,9 +9,9 @@
             "institution": "Yale University"
         }
     ],
-    "framework-version": 14,
+    "framework-version": 16,
     "compatibility": {
-        "redcap-version-min": "13.7.3",
+        "redcap-version-min": "15.0.9",
         "php-version-min": "7.4.0"
     },
 

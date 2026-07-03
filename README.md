@@ -51,7 +51,7 @@ provider's own page before committing, as these change.*
 
 ### Common requirements (all providers)
 
-- **REDCap** 13.7.3+ (External Module Framework v14).
+- **REDCap** 15.0.9+ LTS (or 14.6.4+ standard) — External Module Framework v16.
 - **PHP** 7.4+ with the **cURL** extension (used for server-side token verification).
 - **Outbound HTTPS** from the REDCap server to the provider's verify endpoint —
   all four providers require this. A server behind a tight firewall may block it
