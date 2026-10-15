@@ -2,6 +2,16 @@
 
 All notable changes to this module are documented here.
 
+## Unreleased
+
+- Gate page follows the survey theme: the title carries `id="surveytitle"`, so
+  REDCap's theme CSS gives it the theme's title text color. Before, the theme
+  painted the page background but the title stayed dark (dark text on a dark
+  title band).
+- Continue button is now a light button (`btn-light`, like REDCap's own survey
+  Submit), so a theme's button text color stays readable. On `btn-primary` it
+  landed on Bootstrap blue.
+
 ## v1.0.0 — 2026-07-02
 
 Initial public release.

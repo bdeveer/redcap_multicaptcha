@@ -2,7 +2,9 @@
 <!-- Placeholders are filled by MultiCaptchaExternalModule::renderGate(). -->
 <div id="mc-gate" style="max-width:600px;margin:30px auto;font-family:Arial,Helvetica,sans-serif;">
     {LOGO}
-    <h3 style="margin:10px 0;">{TITLE}</h3>
+    <!-- id="surveytitle" lets REDCap's survey theme CSS color the title, the same way it
+         already paints the page background behind it. -->
+    <h3 id="surveytitle" style="margin:10px 0;">{TITLE}</h3>
 
     <div style="border:1px solid #ddd;border-radius:6px;padding:20px;background:#fafafa;">
         <p style="margin-top:0;">Please complete the verification below to continue to the survey.</p>
@@ -16,8 +18,10 @@
 
             <div id="mc-fail" style="display:{FAILDISPLAY};color:#a00;margin:10px 0;">{FAILMSG}</div>
 
-            <button type="submit" id="mc-submit" class="btn btn-primary" disabled
-                    style="padding:8px 18px;">Continue</button>
+            <!-- Light button, like REDCap's own survey Submit: a theme sets button text color
+                 (with !important), which is unreadable on Bootstrap's blue btn-primary. -->
+            <button type="submit" id="mc-submit" class="btn btn-light" disabled
+                    style="padding:8px 18px;border:1px solid #bbb;">Continue</button>
         </form>
 
         <p style="font-size:11px;color:#999;margin-bottom:0;">Protected by {PROVIDER}.</p>
