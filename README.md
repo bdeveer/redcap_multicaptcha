@@ -164,7 +164,7 @@ redcap_multicaptcha/                  (install as multicaptcha_v<version>)
 
 ## Install
 
-1. Copy this folder to `<redcap-root>/modules/multicaptcha_v1.0.0`
+1. Copy this folder to `<redcap-root>/modules/multicaptcha_v1.0.1`
    (the `_vX.Y.Z` suffix is required by the EM framework).
 2. Edit the `authors` block in `config.json`.
 3. Control Center → External Modules → enable **Multi-CAPTCHA**.
