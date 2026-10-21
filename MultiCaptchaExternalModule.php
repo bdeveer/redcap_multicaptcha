@@ -60,8 +60,7 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
 
         if ($isPostback) {
             $token = trim((string)$_POST[$field]);
-            $remoteIp = trim(explode(",", $_SERVER["HTTP_X_FORWARDED_FOR"] ?? ($_SERVER["REMOTE_ADDR"] ?? ""))[0]);
-            $result = $provider->verify($token, $remoteIp ?: null);
+            $result = $provider->verify($token, $this->clientIp());
             if ($this->debug) {
                 print "<script>console.log('[Multi-CAPTCHA] verify (" . js_escape($provider->getId()) . "):', " . json_encode($result) . ");</script>";
             }
@@ -211,6 +210,23 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
         return true;
     }
 
+    /**
+     * Visitor IP, passed to the provider only as an optional scoring hint.
+     * Uses REMOTE_ADDR, since X-Forwarded-For can be set by anyone. If the
+     * admin says REDCap sits behind a reverse proxy / load balancer, uses the
+     * last X-Forwarded-For entry instead: the one that proxy appended itself,
+     * which the visitor cannot forge (assumes a single proxy hop).
+     */
+    private function clientIp()
+    {
+        $ip = $_SERVER["REMOTE_ADDR"] ?? "";
+        if ($this->getSystemSetting("trust_proxy") && !empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+            $hops = explode(",", $_SERVER["HTTP_X_FORWARDED_FOR"]);
+            $ip = trim(end($hops));
+        }
+        return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : null;
+    }
+
     /** Print the interstitial challenge page from ui.html. */
     private function renderGate($project_id, $provider, $failMsg)
     {
@@ -238,11 +254,12 @@ class MultiCaptchaExternalModule extends AbstractExternalModule
         print str_replace(array_keys($replace), array_values($replace), $template);
     }
 
+    /** Random v4 UUID from a cryptographically secure source (random_bytes, PHP 7+). */
     private static function guid()
     {
-        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000, mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+        $b = random_bytes(16);
+        $b[6] = chr((ord($b[6]) & 0x0f) | 0x40); // version 4
+        $b[8] = chr((ord($b[8]) & 0x3f) | 0x80); // RFC 4122 variant
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($b), 4));
     }
 }

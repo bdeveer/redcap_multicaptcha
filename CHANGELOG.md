@@ -2,6 +2,21 @@
 
 All notable changes to this module are documented here.
 
+## Unreleased (v1.0.2)
+
+Security hardening. Not related to PHP2Shell (CVE-2026-109618 / CVE-2026-109619):
+those are PHP engine flaws, fixed only by updating PHP itself.
+
+- The one-time token used for the post-verification redirect now comes from
+  `random_bytes()` instead of `mt_rand()`.
+- The visitor IP sent to the provider (an optional scoring hint) now comes from
+  `REMOTE_ADDR`. Before, the first `X-Forwarded-For` entry was used, which any
+  client can forge. New system setting **"REDCap is behind a reverse proxy or
+  load balancer"**: when checked, the last `X-Forwarded-For` entry (appended by
+  the proxy) is used instead. Admins behind a proxy should check it after
+  upgrading.
+- Re-run the Consortium security scan (`bin/scan`) before release: PHP changed.
+
 ## v1.0.1 — 2026-10-15
 
 - Gate page follows the survey theme: the title carries `id="surveytitle"`, so

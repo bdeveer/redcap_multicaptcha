@@ -78,6 +78,7 @@
         { "key": "friendly_secret", "name": "Friendly Captcha — API key (secret)", "type": "text",
           "branchingLogic": { "conditions": [ { "field": "provider", "value": "friendly" } ] } },
 
+        { "key": "trust_proxy", "name": "REDCap is behind a reverse proxy or load balancer (use the X-Forwarded-For header for the visitor IP sent to the provider). Leave unchecked otherwise: the header can be forged by anyone.", "type": "checkbox" },
         { "key": "debug", "name": "Global debug mode (log to browser console)", "type": "checkbox" }
     ],
 
